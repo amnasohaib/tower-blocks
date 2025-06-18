@@ -83,7 +83,7 @@ class TowerBlocks {
     });
 
     const block = new THREE.Mesh(geometry, material);
-    block.position.set(0, 0, 0);
+    block.position.set(0, -2, 0);
     block.castShadow = true;
     block.receiveShadow = true;
 
@@ -103,13 +103,13 @@ class TowerBlocks {
 
     this.gameState = "playing";
     document.getElementById("instructions").textContent =
-      "press spacebar to drop blocks and score points.";
+      "";
     this.spawnMovingBlock();
   }
 
   spawnMovingBlock() {
     const lastBlock = this.blocks[this.blocks.length - 1];
-    const y = this.blocks.length * this.initialBlockHeight;
+    const y = this.blocks.length * this.initialBlockHeight - 2;
 
     const geometry = new THREE.BoxGeometry(
       lastBlock.width,
@@ -137,6 +137,7 @@ class TowerBlocks {
     this.currentBlock.userData.height = lastBlock.height;
     this.currentBlock.userData.depth = lastBlock.depth;
 
+    console.log(lastBlock.z, lastBlock.x);
     if (this.movingDirection === "x") {
       this.currentBlock.position.set(-8, y, lastBlock.z);
       this.currentBlock.userData.direction = "x";
@@ -371,6 +372,15 @@ class TowerBlocks {
         } else if (this.gameState === "playing") {
           this.dropBlock();
         }
+      }
+    });
+
+    document.addEventListener("click", (event) => {
+       event.preventDefault();
+      if (this.gameState === "waiting") {
+        this.gameStart();
+      } else if (this.gameState === "playing") {
+        this.dropBlock();
       }
     });
 
